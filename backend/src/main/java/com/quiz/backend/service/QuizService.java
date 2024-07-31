@@ -5,4 +5,5 @@ import com.quiz.backend.entity.Quiz;
 import java.util.List;
 
 public interface QuizService {
+    List<Quiz> getAllQuiz(Long id);
 }

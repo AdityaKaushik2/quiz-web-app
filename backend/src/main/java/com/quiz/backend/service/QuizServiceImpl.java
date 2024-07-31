@@ -1,8 +1,11 @@
 package com.quiz.backend.service;
 
+import com.quiz.backend.entity.Quiz;
 import com.quiz.backend.repository.QuizRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class QuizServiceImpl implements QuizService {
@@ -13,4 +16,8 @@ public class QuizServiceImpl implements QuizService {
         this.quizRepository = quizRepository;
     }
 
+    @Override
+    public List<Quiz> getAllQuiz(Long id) {
+        return quizRepository.findByUserId(id);
+    }
 }
