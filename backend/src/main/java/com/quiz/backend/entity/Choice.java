@@ -5,7 +5,8 @@ import lombok.*;
 
 @Entity
 @Table(name = "choices")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Choice {
