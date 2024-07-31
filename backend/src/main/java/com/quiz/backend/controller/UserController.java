@@ -34,4 +34,9 @@ public class UserController {
         return userService.getUser(id)
                 .orElseThrow(() -> new UserNotFoundException("User with id " + id + " not found"));
     }
+
+    @DeleteMapping("/user/{id}")
+    boolean deleteUser(@PathVariable Long id){
+        return userService.deleteUser(id);
+    }
 }
