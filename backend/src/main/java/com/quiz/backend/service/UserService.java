@@ -11,4 +11,6 @@ public interface UserService {
     User saveUser(User newUser);
 
     Optional<User> getUser(Long id);
+
+    boolean deleteUser(Long id);
 }
