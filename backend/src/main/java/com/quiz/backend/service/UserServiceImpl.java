@@ -5,6 +5,7 @@ import com.quiz.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,6 +43,24 @@ public class UserServiceImpl implements UserService{
         } else{
             userRepository.deleteById(id);
             return true;
+        }
+    }
+
+    @Override
+    public User updateUser(Long id,User newUser){
+        Optional<User> user = userRepository.findById(id);
+        if(user.isPresent()){
+            User updatedUser = user.get();
+            updatedUser.setFirstName(newUser.getFirstName());
+            updatedUser.setLastName(newUser.getLastName());
+            updatedUser.setEmail(newUser.getEmail());
+            updatedUser.setUsername(newUser.getUsername());
+            updatedUser.setPassword(newUser.getPassword());
+            updatedUser.setRole(newUser.getRole());
+            updatedUser.setUpdatedAt(LocalDateTime.now());
+            return userRepository.save(updatedUser);
+        } else{
+            throw new UserNotFoundException("User with id " + id + " not found");
         }
     }
 }
