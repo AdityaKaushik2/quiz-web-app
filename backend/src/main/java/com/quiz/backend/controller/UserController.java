@@ -39,4 +39,9 @@ public class UserController {
     boolean deleteUser(@PathVariable Long id){
         return userService.deleteUser(id);
     }
+
+    @PutMapping("/user/{id}")
+    User updateUser(@PathVariable Long id,@RequestBody User newUser){
+        return userService.updateUser(id,newUser);
+    }
 }
