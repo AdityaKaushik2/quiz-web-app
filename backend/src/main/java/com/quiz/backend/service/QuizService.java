@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface QuizService {
     List<Quiz> getAllQuiz(Long id);
+
+    Quiz saveQuiz(Quiz newQuiz, Long userId);
 }
