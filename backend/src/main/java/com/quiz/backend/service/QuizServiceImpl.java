@@ -32,4 +32,13 @@ public class QuizServiceImpl implements QuizService {
         newQuiz.setUser(user);
         return quizRepository.save(newQuiz);
     }
+
+    @Override
+    public void deleteQuiz(Long quizId, Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(()->new UserNotFoundException("User Not Found"));
+        Quiz quiz = quizRepository.findById(quizId).orElseThrow(()->new UserNotFoundException("Quiz Not Found"));
+        if(quiz.getUser().getId().equals(user.getId())){
+            quizRepository.deleteById(quizId);
+        }
+    }
 }
