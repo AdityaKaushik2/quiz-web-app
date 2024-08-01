@@ -25,4 +25,9 @@ public class QuizController {
     public Quiz saveQuiz(@RequestBody Quiz newQuiz, @PathVariable Long id){
         return quizService.saveQuiz(newQuiz,id);
     }
+
+    @DeleteMapping("user/{userId}/quiz/{quizId}")
+    public void deleteQuiz(@PathVariable Long quizId, @PathVariable Long userId){
+        quizService.deleteQuiz(quizId,userId);
+    }
 }
