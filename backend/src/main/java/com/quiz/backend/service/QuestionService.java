@@ -7,4 +7,6 @@ import java.util.List;
 public interface QuestionService {
 
     List<Question> getAllQuestion(Long userId, Long quizId);
+
+    Question saveQuestion(Long quizId, Long userId, Question newQuestion);
 }
