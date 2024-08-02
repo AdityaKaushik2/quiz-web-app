@@ -10,4 +10,6 @@ public interface QuizService {
     Quiz saveQuiz(Quiz newQuiz, Long userId);
 
     void deleteQuiz(Long quizId, Long userId);
+
+    Quiz updateQuiz(Long quizId, Long userId, Quiz updatedQuiz);
 }
