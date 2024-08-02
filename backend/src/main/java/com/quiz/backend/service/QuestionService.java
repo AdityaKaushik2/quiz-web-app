@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface QuestionService {
 
-    List<Question> getAllQuestion(Long id);
+    List<Question> getAllQuestion(Long userId, Long quizId);
 }

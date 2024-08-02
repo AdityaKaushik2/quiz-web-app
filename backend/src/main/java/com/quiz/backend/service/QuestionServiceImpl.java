@@ -14,7 +14,7 @@ public class QuestionServiceImpl implements QuestionService {
         this.questionRepository = questionRepository;
     }
     @Override
-    public List<Question> getAllQuestion(Long id) {
-        return questionRepository.findByQuiz_Id(id);
+    public List<Question> getAllQuestion(Long userId, Long quizId) {
+        return questionRepository.findByQuiz_IdAndQuiz_User_Id(quizId, userId);
     }
 }
