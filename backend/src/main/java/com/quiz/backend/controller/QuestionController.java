@@ -27,4 +27,9 @@ public class QuestionController {
     public Question saveQuestion(@PathVariable Long quizId, @PathVariable Long userId, @RequestBody Question newQuestion){
         return questionService.saveQuestion(quizId,userId,newQuestion);
     }
+
+    @PutMapping("/questions/{questionId}")
+    public Question updateQuestion(@PathVariable Long quizId, @PathVariable Long userId, @PathVariable Long questionId, @RequestBody Question question){
+        return questionService.updateQuestion(userId, quizId, questionId, question);
+    }
 }

@@ -9,4 +9,6 @@ public interface QuestionService {
     List<Question> getAllQuestion(Long userId, Long quizId);
 
     Question saveQuestion(Long quizId, Long userId, Question newQuestion);
+
+    Question updateQuestion(Long userId, Long quizId, Long questionId, Question question);
 }
