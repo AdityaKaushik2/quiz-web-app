@@ -32,4 +32,9 @@ public class QuestionController {
     public Question updateQuestion(@PathVariable Long quizId, @PathVariable Long userId, @PathVariable Long questionId, @RequestBody Question question){
         return questionService.updateQuestion(userId, quizId, questionId, question);
     }
+
+    @DeleteMapping("/questions/{questionId}")
+    public void deleteQuestion(@PathVariable Long quizId, @PathVariable Long userId, @PathVariable Long questionId){
+        questionService.deleteQuestion(userId, quizId, questionId);
+    }
 }

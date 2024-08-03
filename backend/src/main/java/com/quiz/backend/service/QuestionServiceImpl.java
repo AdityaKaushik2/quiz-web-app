@@ -42,4 +42,10 @@ public class QuestionServiceImpl implements QuestionService {
         existingQuestion.setVersion(existingQuestion.getVersion() + 1);
         return questionRepository.save(existingQuestion);
     }
+
+    @Override
+    public void deleteQuestion(Long userId, Long quizId, Long questionId) {
+        Question question = questionRepository.findByQuiz_IdAndQuiz_User_IdAndId(quizId, userId, questionId);
+        questionRepository.delete(question);
+    }
 }

@@ -11,4 +11,6 @@ public interface QuestionService {
     Question saveQuestion(Long quizId, Long userId, Question newQuestion);
 
     Question updateQuestion(Long userId, Long quizId, Long questionId, Question question);
+
+    void deleteQuestion(Long userId, Long quizId, Long questionId);
 }
