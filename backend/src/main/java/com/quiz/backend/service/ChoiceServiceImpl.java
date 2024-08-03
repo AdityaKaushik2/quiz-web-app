@@ -36,4 +36,13 @@ public class ChoiceServiceImpl implements ChoiceService {
         choice.setQuestion(question);
         return choiceRepository.save(choice);
     }
+
+    @Override
+    public void deleteChoice(Long userId, Long quizId, Long questionId, Long choiceId) {
+        Choice choice = choiceRepository.findByIdAndQuestion_IdAndQuestion_Quiz_IdAndQuestion_Quiz_User_Id(choiceId, questionId, quizId, userId);
+        if (choice == null){
+            throw new QuizNotFoundException("Choice Not Found");
+        }
+        choiceRepository.delete(choice);
+    }
 }

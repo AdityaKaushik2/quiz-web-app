@@ -27,4 +27,9 @@ public class ChoiceController {
     public Choice saveChoice(@PathVariable Long userId, @PathVariable Long quizId, @PathVariable Long questionId, @RequestBody Choice choice) {
         return choiceService.saveChoice(userId, quizId, questionId, choice);
     }
+
+    @DeleteMapping("/choice/{choiceId}")
+    public void deleteChoice(@PathVariable Long userId, @PathVariable Long quizId, @PathVariable Long questionId, @PathVariable Long choiceId) {
+        choiceService.deleteChoice(userId, quizId, questionId, choiceId);
+    }
 }

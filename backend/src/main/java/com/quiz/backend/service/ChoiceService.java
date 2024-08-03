@@ -8,4 +8,6 @@ public interface ChoiceService {
     List<Choice> getAllChoice(Long userId, Long quizId,Long questionId);
 
     Choice saveChoice(Long userId, Long quizId, Long questionId, Choice choice);
+
+    void deleteChoice(Long userId, Long quizId, Long questionId, Long choiceId);
 }
