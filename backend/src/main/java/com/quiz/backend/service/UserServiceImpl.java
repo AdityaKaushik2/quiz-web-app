@@ -1,6 +1,8 @@
 package com.quiz.backend.service;
+import com.quiz.backend.entity.Quiz;
 import com.quiz.backend.entity.User;
 import com.quiz.backend.exception.UserNotFoundException;
+import com.quiz.backend.repository.QuizRepository;
 import com.quiz.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,10 +16,11 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService{
 
     private final UserRepository userRepository;
-
+    private final QuizRepository quizRepository;
     @Autowired
-    public UserServiceImpl(UserRepository userRepository){
+    public UserServiceImpl(UserRepository userRepository,QuizRepository quizRepository){
         this.userRepository = userRepository;
+        this.quizRepository = quizRepository;
     }
 
     @Override
@@ -37,13 +40,15 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public boolean deleteUser(Long id) {
-        Optional<User> user =  userRepository.findById(id);
-        if(user.isEmpty()){
-            throw new UserNotFoundException("User Does not exist");
-        } else{
-            userRepository.deleteById(id);
-            return true;
-        }
+        User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User Does not exist"));
+
+        //Deleting all the quizzes associated with the user before deleting the user
+        List<Quiz> quizzes = quizRepository.findByUser_Id(id);
+        quizRepository.deleteAll(quizzes);
+
+        //Deleting the user
+        userRepository.delete(user);
+        return true;
     }
 
     @Override
