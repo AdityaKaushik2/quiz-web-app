@@ -10,4 +10,6 @@ public interface ChoiceService {
     Choice saveChoice(Long userId, Long quizId, Long questionId, Choice choice);
 
     void deleteChoice(Long userId, Long quizId, Long questionId, Long choiceId);
+
+    Choice updateChoice(Long userId, Long quizId, Long questionId, Long choiceId, Choice choice);
 }

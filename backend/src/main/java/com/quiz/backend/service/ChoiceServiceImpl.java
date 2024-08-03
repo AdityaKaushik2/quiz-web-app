@@ -45,4 +45,15 @@ public class ChoiceServiceImpl implements ChoiceService {
         }
         choiceRepository.delete(choice);
     }
+
+    @Override
+    public Choice updateChoice(Long userId, Long quizId, Long questionId, Long choiceId, Choice newChoice) {
+        Choice oldChoice = choiceRepository.findByIdAndQuestion_IdAndQuestion_Quiz_IdAndQuestion_Quiz_User_Id(choiceId, questionId, quizId, userId);
+        if (oldChoice == null){
+            throw new QuizNotFoundException("Choice Not Found");
+        }
+        oldChoice.setContent(newChoice.getContent());
+        oldChoice.setCorrect(newChoice.isCorrect());
+        return choiceRepository.save(oldChoice);
+    }
 }

@@ -32,4 +32,9 @@ public class ChoiceController {
     public void deleteChoice(@PathVariable Long userId, @PathVariable Long quizId, @PathVariable Long questionId, @PathVariable Long choiceId) {
         choiceService.deleteChoice(userId, quizId, questionId, choiceId);
     }
+
+    @PutMapping("/choice/{choiceId}")
+    public Choice updateChoice(@PathVariable Long userId, @PathVariable Long quizId, @PathVariable Long questionId, @PathVariable Long choiceId, @RequestBody Choice choice) {
+        return choiceService.updateChoice(userId, quizId, questionId, choiceId, choice);
+    }
 }
