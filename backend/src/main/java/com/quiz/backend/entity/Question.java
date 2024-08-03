@@ -28,7 +28,7 @@ public class Question {
     @Column(name = "version", nullable = false)
     private int version;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "quiz_id", nullable = false)
     private Quiz quiz;
 }
