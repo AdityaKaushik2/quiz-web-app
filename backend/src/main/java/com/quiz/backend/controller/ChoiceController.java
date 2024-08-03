@@ -3,6 +3,8 @@ package com.quiz.backend.controller;
 import com.quiz.backend.entity.Choice;
 import com.quiz.backend.service.ChoiceService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,22 +21,38 @@ public class ChoiceController {
     }
 
     @GetMapping("/choice")
-    public List<Choice> getAllChoice(@PathVariable Long userId, @PathVariable Long quizId, @PathVariable Long questionId) {
-        return choiceService.getAllChoice(userId, quizId, questionId);
+    public ResponseEntity<List<Choice>> getAllChoice(@PathVariable Long userId, @PathVariable Long quizId, @PathVariable Long questionId) {
+        List<Choice> choices = choiceService.getAllChoice(userId, quizId, questionId);
+        return new ResponseEntity<>(choices, HttpStatus.OK);
     }
 
     @PostMapping("/choice")
-    public Choice saveChoice(@PathVariable Long userId, @PathVariable Long quizId, @PathVariable Long questionId, @RequestBody Choice choice) {
-        return choiceService.saveChoice(userId, quizId, questionId, choice);
+    public ResponseEntity<Choice> saveChoice(@PathVariable Long userId, @PathVariable Long quizId, @PathVariable Long questionId, @RequestBody Choice choice) {
+        try {
+            Choice savedChoice = choiceService.saveChoice(userId, quizId, questionId, choice);
+            return new ResponseEntity<>(savedChoice, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @DeleteMapping("/choice/{choiceId}")
-    public void deleteChoice(@PathVariable Long userId, @PathVariable Long quizId, @PathVariable Long questionId, @PathVariable Long choiceId) {
-        choiceService.deleteChoice(userId, quizId, questionId, choiceId);
+    public ResponseEntity<Void> deleteChoice(@PathVariable Long userId, @PathVariable Long quizId, @PathVariable Long questionId, @PathVariable Long choiceId) {
+        try {
+            choiceService.deleteChoice(userId, quizId, questionId, choiceId);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @PutMapping("/choice/{choiceId}")
-    public Choice updateChoice(@PathVariable Long userId, @PathVariable Long quizId, @PathVariable Long questionId, @PathVariable Long choiceId, @RequestBody Choice choice) {
-        return choiceService.updateChoice(userId, quizId, questionId, choiceId, choice);
+    public ResponseEntity<Choice> updateChoice(@PathVariable Long userId, @PathVariable Long quizId, @PathVariable Long questionId, @PathVariable Long choiceId, @RequestBody Choice newChoice) {
+        try {
+            Choice updatedChoice = choiceService.updateChoice(userId, quizId, questionId, choiceId, newChoice);
+            return new ResponseEntity<>(updatedChoice, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 }

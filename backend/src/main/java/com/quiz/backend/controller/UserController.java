@@ -4,6 +4,8 @@ import com.quiz.backend.entity.User;
 import com.quiz.backend.exception.UserNotFoundException;
 import com.quiz.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,28 +22,44 @@ public class UserController {
     }
 
     @PostMapping("/user")
-    User saveUser(@RequestBody User newUser) {
-        return userService.saveUser(newUser);
+    public ResponseEntity<User> saveUser(@RequestBody User newUser) {
+        User savedUser = userService.saveUser(newUser);
+        return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
     }
 
     @GetMapping("/users")
-    List<User> getAllUsers() {
-        return userService.getAllUsers();
+    public ResponseEntity<List<User>> getAllUsers() {
+        List<User> users = userService.getAllUsers();
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
     @GetMapping("/user/{id}")
-    User getUser(@PathVariable Long id) {
-        return userService.getUser(id)
-                .orElseThrow(() -> new UserNotFoundException("User with id " + id + " not found"));
+    public ResponseEntity<?> getUser(@PathVariable Long id) {
+        Optional<User> user = userService.getUser(id);
+        if (user.isPresent()) {
+            return new ResponseEntity<>(user.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+        }
     }
 
     @DeleteMapping("/user/{id}")
-    boolean deleteUser(@PathVariable Long id){
-        return userService.deleteUser(id);
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+        try {
+            userService.deleteUser(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (UserNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @PutMapping("/user/{id}")
-    User updateUser(@PathVariable Long id,@RequestBody User newUser){
-        return userService.updateUser(id,newUser);
+    public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody User newUser) {
+        try {
+            User updatedUser = userService.updateUser(id, newUser);
+            return new ResponseEntity<>(updatedUser, HttpStatus.OK);
+        } catch (UserNotFoundException e) {
+            return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+        }
     }
 }
