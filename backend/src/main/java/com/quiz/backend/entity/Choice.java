@@ -18,9 +18,9 @@ public class Choice {
     private String content;
 
     @Column(name = "is_correct", nullable = false)
-    private boolean isCorrect;
+    private boolean correct;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "question_id", nullable = false)
     private Question question;
 }
