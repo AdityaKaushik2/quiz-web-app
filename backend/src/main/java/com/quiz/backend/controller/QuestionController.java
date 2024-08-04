@@ -23,6 +23,9 @@ public class QuestionController {
     @GetMapping("/questions")
     public ResponseEntity<List<Question>> getAllQuestion(@PathVariable Long quizId, @PathVariable Long userId) {
         List<Question> questions = questionService.getAllQuestion(quizId, userId);
+        if (questions.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
         return new ResponseEntity<>(questions, HttpStatus.OK);
     }
 
