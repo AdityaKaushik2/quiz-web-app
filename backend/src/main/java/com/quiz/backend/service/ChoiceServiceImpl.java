@@ -22,13 +22,13 @@ public class ChoiceServiceImpl implements ChoiceService {
     }
     @Override
     public List<Choice> getAllChoice(Long userId, Long quizId, Long questionId) {
-        return choiceRepository.findByQuestion_IdAndQuestion_Quiz_IdAndQuestion_Quiz_User_Id(userId, quizId, questionId);
+        return choiceRepository.findByQuestion_IdAndQuestion_Quiz_IdAndQuestion_Quiz_User_Id(questionId, quizId, userId);
     }
 
     @Override
     public Choice saveChoice(Long userId, Long quizId, Long questionId, Choice choice) {
 
-        Question question = questionRepository.findByQuiz_IdAndQuiz_User_IdAndId(questionId,quizId,userId);
+        Question question = questionRepository.findByQuiz_IdAndQuiz_User_IdAndId(quizId,userId,questionId);
 
         if (question == null){
             throw new RuntimeException("Question Not Found  ");

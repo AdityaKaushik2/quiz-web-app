@@ -1,11 +1,14 @@
 package com.quiz.backend.service;
 
+import com.quiz.backend.entity.Choice;
 import com.quiz.backend.entity.Question;
 import com.quiz.backend.entity.Quiz;
 import com.quiz.backend.exception.QuizNotFoundException;
+import com.quiz.backend.repository.ChoiceRepository;
 import com.quiz.backend.repository.QuestionRepository;
 import com.quiz.backend.repository.QuizRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -15,14 +18,16 @@ public class QuestionServiceImpl implements QuestionService {
 
     private final QuestionRepository questionRepository;
     private final QuizRepository quizRepository;
+    private final ChoiceRepository choiceRepository;
 
-    public QuestionServiceImpl(QuestionRepository questionRepository, QuizRepository quizRepository) {
+    public QuestionServiceImpl(QuestionRepository questionRepository, QuizRepository quizRepository, ChoiceRepository choiceRepository) {
         this.questionRepository = questionRepository;
         this.quizRepository = quizRepository;
+        this.choiceRepository = choiceRepository;
     }
 
     @Override
-    public List<Question> getAllQuestion(Long userId, Long quizId) {
+    public List<Question> getAllQuestion(Long quizId, Long userId) {
         return questionRepository.findByQuiz_IdAndQuiz_User_Id(quizId, userId);
     }
 
@@ -46,6 +51,12 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public void deleteQuestion(Long userId, Long quizId, Long questionId) {
         Question question = questionRepository.findByQuiz_IdAndQuiz_User_IdAndId(quizId, userId, questionId);
+
+        //delete all choices associated with the question
+        List<Choice> choice = choiceRepository.findByQuestion_Id(questionId);
+        choiceRepository.deleteByQuestion_Id(questionId);
+
+        //delete the question
         questionRepository.delete(question);
     }
 }
