@@ -1,18 +1,19 @@
 package com.quiz.backend.service;
 
+import com.quiz.backend.dto.UserDTO;
 import com.quiz.backend.entity.User;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface UserService {
-    List<User> getAllUsers();
+    List<UserDTO> getAllUsers();
 
-    User saveUser(User newUser);
+    User saveUser(UserDTO newUserDTO);
 
-    Optional<User> getUser(Long id);
+    Optional<UserDTO> getUser(Long id);
 
     void deleteUser(Long id);
 
-    User updateUser(Long id, User newUser);
+    User updateUser(Long id, UserDTO newUser);
 }

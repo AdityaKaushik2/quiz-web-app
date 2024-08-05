@@ -1,5 +1,6 @@
 package com.quiz.backend.service;
 
+import com.quiz.backend.dto.UserDTO;
 import com.quiz.backend.entity.Question;
 import com.quiz.backend.entity.Quiz;
 import com.quiz.backend.entity.User;
@@ -8,6 +9,7 @@ import com.quiz.backend.repository.ChoiceRepository;
 import com.quiz.backend.repository.QuestionRepository;
 import com.quiz.backend.repository.QuizRepository;
 import com.quiz.backend.repository.UserRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -23,28 +26,46 @@ public class UserServiceImpl implements UserService {
     private final QuizRepository quizRepository;
     private final ChoiceRepository choiceRepository;
     private final QuestionRepository questionRepository;
+    private final ModelMapper modelMapper;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, QuizRepository quizRepository, ChoiceRepository choiceRepository, QuestionRepository questionRepository) {
+    public UserServiceImpl(UserRepository userRepository, QuizRepository quizRepository, ChoiceRepository choiceRepository, QuestionRepository questionRepository, ModelMapper modelMapper) {
         this.userRepository = userRepository;
         this.quizRepository = quizRepository;
         this.choiceRepository = choiceRepository;
         this.questionRepository = questionRepository;
+        this.modelMapper = modelMapper;
     }
 
     @Override
-    public User saveUser(User newUser) {
-        return userRepository.save(newUser);
+    public User saveUser(UserDTO newUserDTO) {
+        User user = modelMapper.map(newUserDTO, User.class);
+        user.setCreatedAt(LocalDateTime.now());
+        user.setUpdatedAt(LocalDateTime.now());
+        return userRepository.save(user);
     }
 
     @Override
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public List<UserDTO> getAllUsers() {
+        List<User> users = userRepository.findAll();
+        return users.stream()
+                .map(user -> modelMapper.map(user, UserDTO.class))
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Optional<User> getUser(Long id) {
-        return userRepository.findById(id);
+    public Optional<UserDTO> getUser(Long id) {
+        return userRepository.findById(id)
+                .map(user -> {
+                    UserDTO userDTO = new UserDTO();
+                    userDTO.setEmail(user.getEmail());
+                    userDTO.setFirstName(user.getFirstName());
+                    userDTO.setLastName(user.getLastName());
+                    userDTO.setPassword(user.getPassword());
+                    userDTO.setUsername(user.getUsername());
+                    userDTO.setRole(user.getRole());
+                    return userDTO;
+                });
     }
 
     @Override
@@ -71,20 +92,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateUser(Long id, User newUser) {
-        Optional<User> user = userRepository.findById(id);
-        if (user.isPresent()) {
-            User updatedUser = user.get();
-            updatedUser.setFirstName(newUser.getFirstName());
-            updatedUser.setLastName(newUser.getLastName());
-            updatedUser.setEmail(newUser.getEmail());
-            updatedUser.setUsername(newUser.getUsername());
-            updatedUser.setPassword(newUser.getPassword());
-            updatedUser.setRole(newUser.getRole());
-            updatedUser.setUpdatedAt(LocalDateTime.now());
-            return userRepository.save(updatedUser);
-        } else {
-            throw new UserNotFoundException("User with id " + id + " not found");
-        }
+    public User updateUser(Long id, UserDTO newUserDTO) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User with id " + id + " not found"));
+
+        // Map fields from UserDTO to User entity
+        user.setFirstName(newUserDTO.getFirstName());
+        user.setLastName(newUserDTO.getLastName());
+        user.setEmail(newUserDTO.getEmail());
+        user.setUsername(newUserDTO.getUsername());
+        user.setPassword(newUserDTO.getPassword());
+        user.setRole(newUserDTO.getRole());
+        user.setUpdatedAt(LocalDateTime.now());
+
+        return userRepository.save(user);
     }
 }
+
