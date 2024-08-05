@@ -1,5 +1,6 @@
 package com.quiz.backend.controller;
 
+import com.quiz.backend.dto.UserDTO;
 import com.quiz.backend.entity.User;
 import com.quiz.backend.exception.UserNotFoundException;
 import com.quiz.backend.service.UserService;
@@ -22,20 +23,20 @@ public class UserController {
     }
 
     @PostMapping("/user")
-    public ResponseEntity<User> saveUser(@RequestBody User newUser) {
-        User savedUser = userService.saveUser(newUser);
+    public ResponseEntity<User> saveUser(@RequestBody UserDTO newUserDTO) {
+        User savedUser = userService.saveUser(newUserDTO);
         return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
     }
 
     @GetMapping("/users")
-    public ResponseEntity<List<User>> getAllUsers() {
-        List<User> users = userService.getAllUsers();
+    public ResponseEntity<List<UserDTO>> getAllUsers() {
+        List<UserDTO> users = userService.getAllUsers();
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
     @GetMapping("/user/{id}")
     public ResponseEntity<?> getUser(@PathVariable Long id) {
-        Optional<User> user = userService.getUser(id);
+        Optional<UserDTO> user = userService.getUser(id);
         if (user.isPresent()) {
             return new ResponseEntity<>(user.get(), HttpStatus.OK);
         } else {
@@ -54,7 +55,7 @@ public class UserController {
     }
 
     @PutMapping("/user/{id}")
-    public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody User newUser) {
+    public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody UserDTO newUser) {
         try {
             User updatedUser = userService.updateUser(id, newUser);
             return new ResponseEntity<>(updatedUser, HttpStatus.OK);
