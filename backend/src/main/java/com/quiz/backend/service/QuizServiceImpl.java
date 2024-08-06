@@ -10,6 +10,7 @@ import com.quiz.backend.repository.ChoiceRepository;
 import com.quiz.backend.repository.QuestionRepository;
 import com.quiz.backend.repository.QuizRepository;
 import com.quiz.backend.repository.UserRepository;
+import com.quiz.backend.utils.CodeGenerator;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -55,7 +56,7 @@ public class QuizServiceImpl implements QuizService {
         quiz.setCreatedAt(LocalDateTime.now());
         quiz.setUpdatedAt(LocalDateTime.now());
         quiz.setVersion(1);
-        quiz.setCode(Math.random() + " "); //random code for testing
+        quiz.setCode(generateUniqueCode()); 
         quiz.setUser(user);
         return quizRepository.save(quiz);
     }
@@ -85,12 +86,20 @@ public class QuizServiceImpl implements QuizService {
         if (!existingQuiz.getUser().getId().equals(userId)) {
             throw new UserNotFoundException("User does not have permission to update this quiz");
         }
-        existingQuiz.setCode(Math.random() + " "); //random code for testing
+        existingQuiz.setCode(generateUniqueCode());
         existingQuiz.setDescription(quizDTO.getDescription());
         existingQuiz.setName(quizDTO.getName());
         existingQuiz.setUpdatedAt(LocalDateTime.now());
         existingQuiz.setVersion(existingQuiz.getVersion() + 1);
 
         return quizRepository.save(existingQuiz);
+    }
+
+    private String generateUniqueCode() {
+        String code;
+        do {
+            code = CodeGenerator.generateCode();
+        } while (quizRepository.existsByCode(code));
+        return code;
     }
 }
