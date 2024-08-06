@@ -1,10 +1,12 @@
 package com.quiz.backend.service;
 
+import com.quiz.backend.dto.ChoiceDTO;
 import com.quiz.backend.entity.Choice;
 import com.quiz.backend.entity.Question;
 import com.quiz.backend.exception.QuizNotFoundException;
 import com.quiz.backend.repository.ChoiceRepository;
 import com.quiz.backend.repository.QuestionRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,15 +16,22 @@ public class ChoiceServiceImpl implements ChoiceService {
 
     private final ChoiceRepository choiceRepository;
     private final QuestionRepository questionRepository;
+    private final ModelMapper modelMapper;
 
     @Autowired
-    public ChoiceServiceImpl(ChoiceRepository choiceRepository, QuestionRepository questionRepository) {
+    public ChoiceServiceImpl(ChoiceRepository choiceRepository, QuestionRepository questionRepository, ModelMapper modelMapper) {
         this.choiceRepository = choiceRepository;
         this.questionRepository = questionRepository;
+        this.modelMapper = modelMapper;
     }
     @Override
-    public List<Choice> getAllChoice(Long userId, Long quizId, Long questionId) {
-        return choiceRepository.findByQuestion_IdAndQuestion_Quiz_IdAndQuestion_Quiz_User_Id(questionId, quizId, userId);
+    public List<ChoiceDTO> getAllChoice(Long userId, Long quizId, Long questionId) {
+
+        List<Choice> choices = choiceRepository.findByQuestion_IdAndQuestion_Quiz_IdAndQuestion_Quiz_User_Id(questionId, quizId, userId);
+
+        return choices.stream()
+                .map(choice -> modelMapper.map(choice, ChoiceDTO.class))
+                .collect(java.util.stream.Collectors.toList());
     }
 
     @Override
