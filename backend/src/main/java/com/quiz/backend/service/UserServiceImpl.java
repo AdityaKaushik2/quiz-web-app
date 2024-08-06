@@ -87,12 +87,11 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User with id " + id + " not found"));
 
-        // Map fields from UserDTO to User entity
         user.setFirstName(newUserDTO.getFirstName());
         user.setLastName(newUserDTO.getLastName());
         user.setEmail(newUserDTO.getEmail());
         user.setUsername(newUserDTO.getUsername());
-        user.setPassword(newUserDTO.getPassword());
+        user.setPassword(user.getPassword());
         user.setRole(newUserDTO.getRole());
         user.setUpdatedAt(LocalDateTime.now());
 
