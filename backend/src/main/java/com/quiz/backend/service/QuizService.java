@@ -1,15 +1,16 @@
 package com.quiz.backend.service;
 
+import com.quiz.backend.dto.QuizDTO;
 import com.quiz.backend.entity.Quiz;
 
 import java.util.List;
 
 public interface QuizService {
-    List<Quiz> getAllQuiz(Long id);
+    List<QuizDTO> getAllQuiz(Long userId);
 
-    Quiz saveQuiz(Quiz newQuiz, Long userId);
+    Quiz saveQuiz(QuizDTO newQuiz, Long userId);
 
     void deleteQuiz(Long quizId, Long userId);
 
-    Quiz updateQuiz(Long quizId, Long userId, Quiz updatedQuiz);
+    Quiz updateQuiz(Long quizId, Long userId, QuizDTO updatedQuiz);
 }
