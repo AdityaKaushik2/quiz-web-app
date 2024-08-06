@@ -1,8 +1,7 @@
 package com.quiz.backend.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
-
-import java.util.List;
 
 @Getter
 @Setter
@@ -10,5 +9,6 @@ import java.util.List;
 @AllArgsConstructor
 public class QuestionDTO {
     private Long id;
-    private List<ChoiceDTO> choices;
+    @NotBlank(message = "Content is mandatory")
+    private String content;
 }
