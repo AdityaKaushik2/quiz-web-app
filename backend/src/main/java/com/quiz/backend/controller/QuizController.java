@@ -1,5 +1,6 @@
 package com.quiz.backend.controller;
 
+import com.quiz.backend.dto.QuizDTO;
 import com.quiz.backend.entity.Quiz;
 import com.quiz.backend.exception.QuizNotFoundException;
 import com.quiz.backend.exception.UserNotFoundException;
@@ -20,14 +21,14 @@ public class QuizController {
         this.quizService = quizService;
     }
 
-    @GetMapping("/quiz/{id}")
-    public ResponseEntity<List<Quiz>> getQuizList(@PathVariable Long id) {
-        List<Quiz> quizzes = quizService.getAllQuiz(id);
+    @GetMapping("/quiz/{userId}")
+    public ResponseEntity<List<QuizDTO>> getQuizList(@PathVariable Long userId) {
+        List<QuizDTO> quizzes = quizService.getAllQuiz(userId);
         return new ResponseEntity<>(quizzes, HttpStatus.OK);
     }
 
     @PostMapping("/{id}/quiz")
-    public ResponseEntity<Quiz> saveQuiz(@RequestBody Quiz newQuiz, @PathVariable Long id) {
+    public ResponseEntity<Quiz> saveQuiz(@RequestBody QuizDTO newQuiz, @PathVariable Long id) {
         Quiz savedQuiz = quizService.saveQuiz(newQuiz, id);
         return new ResponseEntity<>(savedQuiz, HttpStatus.CREATED);
     }
@@ -43,7 +44,7 @@ public class QuizController {
     }
 
     @PutMapping("user/{userId}/quiz/{quizId}")
-    public ResponseEntity<Quiz> updateQuiz(@PathVariable Long quizId, @PathVariable Long userId, @RequestBody Quiz updatedQuiz) {
+    public ResponseEntity<Quiz> updateQuiz(@PathVariable Long quizId, @PathVariable Long userId, @RequestBody QuizDTO updatedQuiz) {
         try {
             Quiz quiz = quizService.updateQuiz(quizId, userId, updatedQuiz);
             return new ResponseEntity<>(quiz, HttpStatus.OK);
