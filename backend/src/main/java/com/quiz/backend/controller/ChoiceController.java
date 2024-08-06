@@ -1,5 +1,6 @@
 package com.quiz.backend.controller;
 
+import com.quiz.backend.dto.ChoiceDTO;
 import com.quiz.backend.entity.Choice;
 import com.quiz.backend.service.ChoiceService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +22,16 @@ public class ChoiceController {
     }
 
     @GetMapping("/choice")
-    public ResponseEntity<List<Choice>> getAllChoice(@PathVariable Long userId, @PathVariable Long quizId, @PathVariable Long questionId) {
-        List<Choice> choices = choiceService.getAllChoice(userId, quizId, questionId);
-        return new ResponseEntity<>(choices, HttpStatus.OK);
+    public ResponseEntity<List<ChoiceDTO>> getAllChoice(@PathVariable Long userId, @PathVariable Long quizId, @PathVariable Long questionId) {
+        try {
+            List<ChoiceDTO> choices = choiceService.getAllChoice(userId, quizId, questionId);
+            if (choices.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            return new ResponseEntity<>(choices, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @PostMapping("/choice")
