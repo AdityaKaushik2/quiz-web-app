@@ -12,4 +12,6 @@ public interface QuizRepository extends JpaRepository<Quiz, Long> {
     Optional<Quiz> findByIdAndUser_Id(Long id, Long userId);
 
     void deleteByUser_Id(Long id);
+
+    boolean existsByCode(String code);
 }
