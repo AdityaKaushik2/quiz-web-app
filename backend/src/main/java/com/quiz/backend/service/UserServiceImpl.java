@@ -11,6 +11,7 @@ import com.quiz.backend.repository.QuizRepository;
 import com.quiz.backend.repository.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,14 +28,16 @@ public class UserServiceImpl implements UserService {
     private final ChoiceRepository choiceRepository;
     private final QuestionRepository questionRepository;
     private final ModelMapper modelMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, QuizRepository quizRepository, ChoiceRepository choiceRepository, QuestionRepository questionRepository, ModelMapper modelMapper) {
+    public UserServiceImpl(UserRepository userRepository, QuizRepository quizRepository, ChoiceRepository choiceRepository, QuestionRepository questionRepository, ModelMapper modelMapper, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.quizRepository = quizRepository;
         this.choiceRepository = choiceRepository;
         this.questionRepository = questionRepository;
         this.modelMapper = modelMapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -42,6 +45,7 @@ public class UserServiceImpl implements UserService {
         User user = modelMapper.map(newUserDTO, User.class);
         user.setCreatedAt(LocalDateTime.now());
         user.setUpdatedAt(LocalDateTime.now());
+        user.setPassword(passwordEncoder.encode(newUserDTO.getPassword()));
         return userRepository.save(user);
     }
 
@@ -68,17 +72,12 @@ public class UserServiceImpl implements UserService {
         for (Quiz quiz : quizzes) {
             List<Question> questions = questionRepository.findByQuiz_Id(quiz.getId());
             for (Question question : questions) {
-                // Delete all choices associated with each question
                 choiceRepository.deleteByQuestion_Id(question.getId());
             }
-            // Delete all questions associated with the quiz
             questionRepository.deleteByQuiz_Id(quiz.getId());
         }
-
-        // Delete all quizzes associated with the user
         quizRepository.deleteByUser_Id(id);
 
-        // Finally, delete the user
         userRepository.delete(user);
     }
 
