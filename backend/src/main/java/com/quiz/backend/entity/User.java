@@ -1,7 +1,11 @@
 package com.quiz.backend.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import jakarta.validation.constraints.Pattern;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
@@ -38,5 +42,6 @@ public class User {
     private LocalDateTime updatedAt;
 
     @Column(name = "username", nullable = false, unique = true)
+    @Pattern(regexp = "^[a-zA-Z0-9]+$", message = "Username must contain only letters and numbers")
     private String username;
 }
