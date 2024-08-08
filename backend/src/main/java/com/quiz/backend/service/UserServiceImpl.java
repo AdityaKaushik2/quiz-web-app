@@ -45,6 +45,7 @@ public class UserServiceImpl implements UserService {
         User user = modelMapper.map(newUserDTO, User.class);
         user.setCreatedAt(LocalDateTime.now());
         user.setUpdatedAt(LocalDateTime.now());
+        user.setUsername(newUserDTO.getUsername().toLowerCase());
         user.setPassword(passwordEncoder.encode(newUserDTO.getPassword()));
         return userRepository.save(user);
     }
