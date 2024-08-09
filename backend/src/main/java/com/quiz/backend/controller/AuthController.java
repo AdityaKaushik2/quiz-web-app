@@ -1,7 +1,7 @@
 package com.quiz.backend.controller;
 
 import com.quiz.backend.dto.LoginDTO;
-import com.quiz.backend.dto.RegisterUserDTO;
+import com.quiz.backend.dto.UserDTO;
 import com.quiz.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,7 +21,7 @@ public class AuthController {
     }
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginDTO loginDTO) {
-        RegisterUserDTO user = userService.authenticate(loginDTO.getUsername(), loginDTO.getPassword());
+        UserDTO user = userService.authenticate(loginDTO.getUsername(), loginDTO.getPassword());
         if (user != null) {
             return new ResponseEntity<>(user, HttpStatus.OK);
         } else {
