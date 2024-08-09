@@ -1,5 +1,6 @@
 package com.quiz.backend.service;
 
+import com.quiz.backend.dto.RegisterUserDTO;
 import com.quiz.backend.dto.UserDTO;
 import com.quiz.backend.entity.Question;
 import com.quiz.backend.entity.Quiz;
@@ -41,12 +42,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User saveUser(UserDTO newUserDTO) {
-        User user = modelMapper.map(newUserDTO, User.class);
+    public User saveUser(RegisterUserDTO newRegisterUserDTO) {
+        User user = modelMapper.map(newRegisterUserDTO, User.class);
         user.setCreatedAt(LocalDateTime.now());
         user.setUpdatedAt(LocalDateTime.now());
-        user.setUsername(newUserDTO.getUsername().toLowerCase());
-        user.setPassword(passwordEncoder.encode(newUserDTO.getPassword()));
+        user.setUsername(newRegisterUserDTO.getUsername().toLowerCase());
+        user.setRole("user");
+        user.setPassword(passwordEncoder.encode(newRegisterUserDTO.getPassword()));
         return userRepository.save(user);
     }
 
@@ -59,8 +61,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<UserDTO> getUser(Long id) {
-        return userRepository.findById(id)
+    public Optional<UserDTO> getUser(String username) {
+        return userRepository.findByUsername(username)
                 .map(user -> modelMapper.map(user, UserDTO.class));
     }
 
@@ -83,19 +85,29 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateUser(Long id, UserDTO newUserDTO) {
+    public User updateUser(Long id, UserDTO newRegisterUserDTO) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User with id " + id + " not found"));
 
-        user.setFirstName(newUserDTO.getFirstName());
-        user.setLastName(newUserDTO.getLastName());
-        user.setEmail(newUserDTO.getEmail());
-        user.setUsername(newUserDTO.getUsername());
+        user.setFirstName(newRegisterUserDTO.getFirstName());
+        user.setLastName(newRegisterUserDTO.getLastName());
+        user.setEmail(newRegisterUserDTO.getEmail());
+        user.setUsername(newRegisterUserDTO.getUsername());
         user.setPassword(user.getPassword());
-        user.setRole(newUserDTO.getRole());
+        user.setRole("user");
         user.setUpdatedAt(LocalDateTime.now());
 
         return userRepository.save(user);
+    }
+
+    @Override
+    public UserDTO authenticate(String username, String password) {
+    User user = userRepository.findByUsername(username).orElseThrow(    () -> new UserNotFoundException("User with username " + username + " not found"));
+
+    if (user != null && passwordEncoder.matches(password, user.getPassword())) {
+        return modelMapper.map(user, UserDTO.class);
+    }
+        return null;
     }
 }
 
