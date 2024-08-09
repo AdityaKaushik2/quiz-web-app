@@ -24,7 +24,4 @@ public class RegisterUserDTO {
 
     @NotBlank(message = "Username is mandatory")
     private String username;
-
-    @NotBlank(message = "Role is mandatory")
-    private String role;
 }
