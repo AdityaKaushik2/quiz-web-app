@@ -1,6 +1,6 @@
 import React from 'react';
-import LoginSection from '../LoginSection/LoginSection';
-import QuizCodeSection from '../QuizCodeSection/QuizCodeSection';
+import LoginSection from './LoginSection.jsx';
+import QuizCodeSection from './QuizCodeSection.jsx';
 
 const Homepage = () => {
     return (
