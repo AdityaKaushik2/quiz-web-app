@@ -17,20 +17,23 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SpringSecurity {
 
-    private final CustomUserDetailsService CustomUserDetailsService;
+    private final CustomUserDetailsService customUserDetailsService;
 
     @Autowired
-    public SpringSecurity(CustomUserDetailsService CustomUserDetailsService) {
-        this.CustomUserDetailsService = CustomUserDetailsService;
+    public SpringSecurity(CustomUserDetailsService customUserDetailsService) {
+        this.customUserDetailsService = customUserDetailsService;
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(customizer->customizer.disable())
-                .authorizeHttpRequests(request->request.requestMatchers("/user").permitAll()
+        http.csrf(customizer -> customizer.disable())
+                .authorizeHttpRequests(request -> request
+                        .requestMatchers("/api/auth/login", "/api/user").permitAll()
                         .anyRequest().authenticated())
-                .httpBasic(Customizer.withDefaults())
-                .sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                        .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                        .httpBasic(Customizer.withDefaults());
+
         return http.build();
     }
 
@@ -38,11 +41,11 @@ public class SpringSecurity {
     public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
         AuthenticationManagerBuilder authenticationManagerBuilder =
                 http.getSharedObject(AuthenticationManagerBuilder.class);
-        authenticationManagerBuilder.userDetailsService(CustomUserDetailsService)
+        authenticationManagerBuilder
+                .userDetailsService(customUserDetailsService)
                 .passwordEncoder(passwordEncoder());
         return authenticationManagerBuilder.build();
     }
-
 
     @Bean
     public PasswordEncoder passwordEncoder() {
