@@ -7,7 +7,7 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDTO {
+public class RegisterUserDTO {
     @NotBlank(message = "Email is mandatory")
     @Email(message = "Email should be valid")
     private String email;
