@@ -95,6 +95,12 @@ public class QuizServiceImpl implements QuizService {
         return quizRepository.save(existingQuiz);
     }
 
+    @Override
+    public Quiz getQuiz(String code) {
+        return quizRepository.findByCode(code)
+                .orElseThrow(() -> new QuizNotFoundException("Quiz not found with code: " + code));
+    }
+
     private String generateUniqueCode() {
         String code;
         do {

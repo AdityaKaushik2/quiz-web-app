@@ -13,4 +13,6 @@ public interface QuizService {
     void deleteQuiz(Long quizId, Long userId);
 
     Quiz updateQuiz(Long quizId, Long userId, QuizDTO updatedQuiz);
+
+    Quiz getQuiz(String code);
 }
