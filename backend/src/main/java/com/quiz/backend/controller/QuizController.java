@@ -21,7 +21,7 @@ public class QuizController {
         this.quizService = quizService;
     }
 
-    @GetMapping("/quiz/{userId}")
+    @GetMapping("/user/quiz/{userId}")
     public ResponseEntity<List<QuizDTO>> getQuizList(@PathVariable Long userId) {
         List<QuizDTO> quizzes = quizService.getAllQuiz(userId);
         return new ResponseEntity<>(quizzes, HttpStatus.OK);
@@ -49,6 +49,16 @@ public class QuizController {
             Quiz quiz = quizService.updateQuiz(quizId, userId, updatedQuiz);
             return new ResponseEntity<>(quiz, HttpStatus.OK);
         } catch (QuizNotFoundException | UserNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/quiz/{code}")
+    public ResponseEntity<Quiz> getQuiz(@PathVariable String code) {
+        try {
+            Quiz quiz = quizService.getQuiz(code);
+            return new ResponseEntity<>(quiz, HttpStatus.OK);
+        } catch (QuizNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
