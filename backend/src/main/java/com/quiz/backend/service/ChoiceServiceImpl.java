@@ -2,7 +2,8 @@ package com.quiz.backend.service;
 
 import com.quiz.backend.dto.ChoiceDTO;
 import com.quiz.backend.entity.Choice;
-import com.quiz.backend.entity.Question;
+import com.quiz.backend.exception.ChoiceLimitExceededException;
+import com.quiz.backend.exception.QuestionNotFoundException;
 import com.quiz.backend.exception.QuizNotFoundException;
 import com.quiz.backend.repository.ChoiceRepository;
 import com.quiz.backend.repository.QuestionRepository;
@@ -34,15 +35,14 @@ public class ChoiceServiceImpl implements ChoiceService {
                 .collect(java.util.stream.Collectors.toList());
     }
 
-    @Override
     public Choice saveChoice(Long userId, Long quizId, Long questionId, Choice choice) {
-
-        Question question = questionRepository.findByQuiz_IdAndQuiz_User_IdAndId(quizId,userId,questionId);
-
-        if (question == null){
-            throw new RuntimeException("Question Not Found  ");
+        if (!questionRepository.existsById(questionId)) {
+            throw new QuestionNotFoundException("Question not found");
         }
-        choice.setQuestion(question);
+        long currentChoiceCount = choiceRepository.countByQuestionId(questionId);
+        if (currentChoiceCount >= 4) {
+            throw new ChoiceLimitExceededException("Cannot add more than 4 choices to a question");
+        }
         return choiceRepository.save(choice);
     }
 

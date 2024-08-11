@@ -15,4 +15,6 @@ public interface ChoiceRepository extends JpaRepository<Choice, Long> {
     Choice findByIdAndQuestion_IdAndQuestion_Quiz_IdAndQuestion_Quiz_User_Id(Long choiceId, Long questionId, Long quizId, Long userId);
 
     void deleteByQuestion_Id(Long questionId);
+
+    long countByQuestionId(Long questionId);
 }
