@@ -2,6 +2,7 @@ package com.quiz.backend.service;
 
 import com.quiz.backend.dto.ChoiceDTO;
 import com.quiz.backend.entity.Choice;
+import com.quiz.backend.entity.Question;
 import com.quiz.backend.exception.ChoiceLimitExceededException;
 import com.quiz.backend.exception.QuestionNotFoundException;
 import com.quiz.backend.exception.QuizNotFoundException;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
 @Service
 public class ChoiceServiceImpl implements ChoiceService {
 
@@ -43,6 +45,9 @@ public class ChoiceServiceImpl implements ChoiceService {
         if (currentChoiceCount >= 4) {
             throw new ChoiceLimitExceededException("Cannot add more than 4 choices to a question");
         }
+
+        Question question = questionRepository.findById(questionId).orElseThrow(() -> new QuestionNotFoundException("Question Not Found"));
+        choice.setQuestion(question);
         return choiceRepository.save(choice);
     }
 
