@@ -1,7 +1,9 @@
 package com.quiz.backend.controller;
 
 import com.quiz.backend.dto.LoginDTO;
+import com.quiz.backend.dto.ResponseDTO;
 import com.quiz.backend.jwt.JwtUtils;
+import com.quiz.backend.repository.UserRepository;
 import com.quiz.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,13 +23,16 @@ public class AuthController {
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
     private final JwtUtils jwtUtils;
+    private final UserRepository userRepository;
 
     @Autowired
-    public AuthController(UserService userService, AuthenticationManager authenticationManager, JwtUtils jwtUtils) {
+    public AuthController(UserService userService, AuthenticationManager authenticationManager, JwtUtils jwtUtils, UserRepository userRepository) {
         this.userService = userService;
         this.authenticationManager = authenticationManager;
         this.jwtUtils = jwtUtils;
+        this.userRepository = userRepository;
     }
+
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginDTO loginDTO) {
         Authentication authentication;
@@ -46,6 +51,11 @@ public class AuthController {
 
         String jwtToken = jwtUtils.generateTokenFromUsername(userDetails);
 
-        return ResponseEntity.ok(jwtToken);
+        ResponseDTO responseDTO = new ResponseDTO();
+        responseDTO.setJwtToken(jwtToken);
+        responseDTO.setId(userRepository.findByUsername(userDetails.getUsername())
+                .orElseThrow(() -> new RuntimeException("User not found")).getId());
+
+        return ResponseEntity.ok(responseDTO);
     }
 }
