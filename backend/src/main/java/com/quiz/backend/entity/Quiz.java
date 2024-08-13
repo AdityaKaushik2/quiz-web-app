@@ -35,7 +35,7 @@ public class Quiz {
     @Column(name = "version", nullable = false)
     private int version;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "creator_id", nullable = false)
     @JsonIgnore
     private User user;
