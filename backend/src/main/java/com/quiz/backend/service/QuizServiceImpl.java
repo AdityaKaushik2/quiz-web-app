@@ -1,6 +1,7 @@
 package com.quiz.backend.service;
 
 import com.quiz.backend.dto.QuizDTO;
+import com.quiz.backend.dto.QuizResponseDTO;
 import com.quiz.backend.entity.Question;
 import com.quiz.backend.entity.Quiz;
 import com.quiz.backend.entity.User;
@@ -41,11 +42,11 @@ public class QuizServiceImpl implements QuizService {
     }
 
     @Override
-    public List<QuizDTO> getAllQuiz(Long userId) {
+    public List<QuizResponseDTO> getAllQuiz(Long userId) {
         List<Quiz> quizzes = quizRepository.findByUser_Id(userId);
 
         return quizzes.stream()
-                .map(quiz -> modelMapper.map(quiz, QuizDTO.class))
+                .map(quiz -> modelMapper.map(quiz, QuizResponseDTO.class))
                 .collect(Collectors.toList());
     }
 

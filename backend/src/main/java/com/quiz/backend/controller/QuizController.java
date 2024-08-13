@@ -1,6 +1,7 @@
 package com.quiz.backend.controller;
 
 import com.quiz.backend.dto.QuizDTO;
+import com.quiz.backend.dto.QuizResponseDTO;
 import com.quiz.backend.entity.Quiz;
 import com.quiz.backend.exception.QuizNotFoundException;
 import com.quiz.backend.exception.UserNotFoundException;
@@ -22,8 +23,8 @@ public class QuizController {
     }
 
     @GetMapping("/user/quiz/{userId}")
-    public ResponseEntity<List<QuizDTO>> getQuizList(@PathVariable Long userId) {
-        List<QuizDTO> quizzes = quizService.getAllQuiz(userId);
+    public ResponseEntity<List<QuizResponseDTO>> getQuizList(@PathVariable Long userId) {
+        List<QuizResponseDTO> quizzes = quizService.getAllQuiz(userId);
         return new ResponseEntity<>(quizzes, HttpStatus.OK);
     }
 
