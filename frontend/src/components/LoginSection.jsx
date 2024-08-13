@@ -1,70 +1,72 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import {toast} from "react-toastify";
 
-const LoginSection = () => {
+const LoginPage = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
     const navigate = useNavigate();
 
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:8080/api/auth/login', {
-                username,
-                password
-            });
-            localStorage.setItem('authToken', `Bearer ${response.data.token}`); // Adjust according to your backend
-            navigate(`/user-details/${username}`);
+            const response = await axios.post('http://localhost:8080/api/auth/login', { username, password });
+
+            const { id: userId, jwtToken: token } = response.data;
+
+            if (token && userId) {
+                localStorage.setItem('token', token);
+                localStorage.setItem('userId', userId);
+                toast.success('Login successful');
+                navigate('/dashboard');
+            } else {
+                toast.error("Wrong Credentials")
+                console.error('Token or userId is missing from the response');
+            }
         } catch (error) {
-            setError('Invalid credentials');
-            console.error('Login error:', error.response ? error.response.data : error.message);
+            toast.error("Login failed")
+            console.error('Login failed', error);
         }
+    };
+
+    const handleRegisterRedirect = () => {
+        navigate('/register');
     };
 
     return (
         <div className="flex items-center justify-center h-screen bg-gray-100">
-            <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-md">
-                <h2 className="text-2xl font-bold mb-6">Login</h2>
-                {error && <div className="text-red-500 mb-4">{error}</div>}
+            <div className="p-6 max-w-sm w-full bg-white rounded-lg shadow-md">
+                <h1 className="text-xl font-bold mb-4">Login</h1>
                 <form onSubmit={handleLogin}>
-                    <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
-                            Username
-                        </label>
-                        <input
-                            type="text"
-                            id="username"
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                            required
-                        />
-                    </div>
-                    <div className="mb-6">
-                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
-                            Password
-                        </label>
-                        <input
-                            type="password"
-                            id="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                            required
-                        />
-                    </div>
-                    <button
-                        type="submit"
-                        className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600"
-                    >
-                        Login
-                    </button>
+                    <input
+                        type="text"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                        placeholder="Username"
+                        className="w-full p-2 mb-4 border rounded"
+                    />
+                    <input
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        placeholder="Password"
+                        className="w-full p-2 mb-4 border rounded"
+                    />
+                    <button className="w-full bg-blue-500 text-white p-2 rounded">Login</button>
                 </form>
+                <div className="mt-4 text-center">
+                    <p className="text-gray-600">{`Don't have an account?`}</p>
+                    <button
+                        onClick={handleRegisterRedirect}
+                        className="mt-2 text-blue-500 hover:underline"
+                    >
+                        Register Here
+                    </button>
+                </div>
             </div>
         </div>
     );
 };
 
-export default LoginSection;
+export default LoginPage;
