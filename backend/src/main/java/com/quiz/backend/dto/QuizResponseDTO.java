@@ -12,4 +12,6 @@ public class QuizResponseDTO {
     private String description;
 
     private String code;
+
+    private Long userId;
 }
