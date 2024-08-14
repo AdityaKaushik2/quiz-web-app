@@ -6,6 +6,7 @@ const AttemptQuiz = () => {
     const { quizCode } = useParams();
     const [quizData, setQuizData] = useState(null);
     const [questions, setQuestions] = useState([]);
+    const [selectedOptions, setSelectedOptions] = useState({});
     const [error, setError] = useState('');
 
     useEffect(() => {
@@ -53,6 +54,13 @@ const AttemptQuiz = () => {
         fetchQuizData();
     }, [quizCode]);
 
+    const handleOptionChange = (questionId, choiceId) => {
+        setSelectedOptions((prevState) => ({
+            ...prevState,
+            [questionId]: choiceId,
+        }));
+    };
+
     if (error) {
         return <div className="text-red-500 text-center mt-4">{error}</div>;
     }
@@ -68,14 +76,31 @@ const AttemptQuiz = () => {
                             <h3 className="font-semibold mb-2">{`${index + 1}. ${question.content}`}</h3>
                             <div className="ml-4">
                                 {Array.isArray(question.choices) ? (
-                                    question.choices.map((choice) => (
-                                        <div key={choice.id} className="mb-2">
-                                            <label className="inline-flex items-center">
-                                                <input type="radio" name={`question-${question.id}`} value={choice.id} className="form-radio h-5 w-5 text-indigo-600" />
-                                                <span className="ml-2">{choice.content}</span>
-                                            </label>
-                                        </div>
-                                    ))
+                                    question.choices.map((choice) => {
+                                        const isSelected = selectedOptions[question.id] === choice.id;
+                                        const isCorrect = choice.correct;
+                                        const backgroundColor = isSelected
+                                            ? isCorrect
+                                                ? 'bg-green-500'
+                                                : 'bg-red-500'
+                                            : 'bg-white';
+                                        const borderColor = isSelected ? (isCorrect ? 'bg-green-500' : 'bg-red-500') : 'border-gray-300';
+
+                                        return (
+                                            <div key={choice.id} className={`mb-2 p-2 border rounded ${borderColor}`} style={{ backgroundColor }}>
+                                                <label className="inline-flex items-center">
+                                                    <input
+                                                        type="radio"
+                                                        name={`question-${question.id}`}
+                                                        value={choice.id}
+                                                        onChange={() => handleOptionChange(question.id, choice.id)}
+                                                        className="form-radio h-5 w-5 text-indigo-600"
+                                                    />
+                                                    <span className="ml-2">{choice.content}</span>
+                                                </label>
+                                            </div>
+                                        );
+                                    })
                                 ) : (
                                     <p className="text-red-500">No choices available for this question.</p>
                                 )}
