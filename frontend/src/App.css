@@ -7,3 +7,9 @@
 .flex-grow {
   flex-grow: 1;
 }
+
+.toastBody {
+  font-family: "Atlas Grotesk Web", Arial, Helvetica, sans-serif;
+  color: white; /* #10171D */
+  font-size: 1rem !important;
+}
