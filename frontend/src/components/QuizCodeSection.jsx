@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const QuizCodeSection = () => {
     const [quizCode, setQuizCode] = useState('');
+    const navigate = useNavigate();
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Handle quiz code submission
-        console.log('Quiz Code:', quizCode);
+        navigate(`/attempt-quiz/${quizCode}`);
     };
 
     return (
