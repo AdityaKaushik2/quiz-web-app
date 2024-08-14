@@ -1,32 +1,37 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import {toast} from "react-toastify";
+import { useDispatch } from 'react-redux';
+import { setCredentials, setStatus, setError } from '../redux/userSlice';
+import { toast } from 'react-toastify';
 
 const LoginPage = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const handleLogin = async (e) => {
         e.preventDefault();
+        dispatch(setStatus('loading'));
         try {
             const response = await axios.post('http://localhost:8080/api/auth/login', { username, password });
-
             const { id: userId, jwtToken: token } = response.data;
 
             if (token && userId) {
                 localStorage.setItem('token', token);
                 localStorage.setItem('userId', userId);
+                dispatch(setCredentials({ userId, token }));
+                dispatch(setStatus('succeeded'));
                 toast.success('Login successful');
                 navigate('/dashboard');
             } else {
-                toast.error("Wrong Credentials")
-                console.error('Token or userId is missing from the response');
+                toast.error("Wrong Credentials");
+                dispatch(setError("Wrong Credentials"));
             }
         } catch (error) {
-            toast.error("Login failed")
-            console.error('Login failed', error);
+            toast.error("Login failed");
+            dispatch(setError('Login failed'));
         }
     };
 
