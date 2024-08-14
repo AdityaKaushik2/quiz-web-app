@@ -10,4 +10,6 @@ public class QuizResponseDTO {
     private String name;
 
     private String description;
+
+    private String code;
 }
