@@ -55,9 +55,9 @@ public class QuizController {
     }
 
     @GetMapping("/quiz/{code}")
-    public ResponseEntity<Quiz> getQuiz(@PathVariable String code) {
+    public ResponseEntity<QuizResponseDTO> getQuiz(@PathVariable String code) {
         try {
-            Quiz quiz = quizService.getQuiz(code);
+            QuizResponseDTO quiz = quizService.getQuiz(code);
             return new ResponseEntity<>(quiz, HttpStatus.OK);
         } catch (QuizNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

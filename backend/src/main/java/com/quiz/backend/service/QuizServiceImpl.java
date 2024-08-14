@@ -97,9 +97,13 @@ public class QuizServiceImpl implements QuizService {
     }
 
     @Override
-    public Quiz getQuiz(String code) {
-        return quizRepository.findByCode(code)
+    public QuizResponseDTO getQuiz(String code) {
+        Quiz quiz = quizRepository.findByCode(code)
                 .orElseThrow(() -> new QuizNotFoundException("Quiz not found with code: " + code));
+        QuizResponseDTO quizResponseDTO = modelMapper.map(quiz, QuizResponseDTO.class);
+        quizResponseDTO.setUserId(quiz.getUser().getId());
+
+        return quizResponseDTO;
     }
 
     private String generateUniqueCode() {

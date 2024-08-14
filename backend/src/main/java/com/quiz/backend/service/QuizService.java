@@ -15,5 +15,5 @@ public interface QuizService {
 
     Quiz updateQuiz(Long quizId, Long userId, QuizDTO updatedQuiz);
 
-    Quiz getQuiz(String code);
+    QuizResponseDTO getQuiz(String code);
 }
