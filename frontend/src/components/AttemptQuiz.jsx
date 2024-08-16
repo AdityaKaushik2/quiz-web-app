@@ -7,6 +7,8 @@ const AttemptQuiz = () => {
     const [quizData, setQuizData] = useState(null);
     const [questions, setQuestions] = useState([]);
     const [selectedOptions, setSelectedOptions] = useState({});
+    const [submitted, setSubmitted] = useState(false);
+    const [score, setScore] = useState(0);
     const [error, setError] = useState('');
 
     useEffect(() => {
@@ -23,7 +25,7 @@ const AttemptQuiz = () => {
                 setQuizData(response.data);
 
                 // Extract userId from the quiz data
-                const userId = response.data.userId; // This should be the userId from the quiz data
+                const userId = response.data.userId;
 
                 // Fetch questions using quizId from the response
                 const quizId = response.data.id;
@@ -55,10 +57,26 @@ const AttemptQuiz = () => {
     }, [quizCode]);
 
     const handleOptionChange = (questionId, choiceId) => {
-        setSelectedOptions((prevState) => ({
-            ...prevState,
-            [questionId]: choiceId,
-        }));
+        if (!submitted) {
+            setSelectedOptions((prevState) => ({
+                ...prevState,
+                [questionId]: choiceId,
+            }));
+        }
+    };
+
+    const handleSubmit = () => {
+        let calculatedScore = 0;
+
+        questions.forEach((question) => {
+            const selectedChoice = question.choices.find(choice => choice.id === selectedOptions[question.id]);
+            if (selectedChoice && selectedChoice.correct) {
+                calculatedScore += 1;
+            }
+        });
+
+        setScore(calculatedScore);
+        setSubmitted(true);
     };
 
     if (error) {
@@ -79,15 +97,18 @@ const AttemptQuiz = () => {
                                     question.choices.map((choice) => {
                                         const isSelected = selectedOptions[question.id] === choice.id;
                                         const isCorrect = choice.correct;
-                                        const backgroundColor = isSelected
+                                        const backgroundColor = submitted
                                             ? isCorrect
                                                 ? 'bg-green-500'
-                                                : 'bg-red-500'
-                                            : 'bg-white';
-                                        const borderColor = isSelected ? (isCorrect ? 'bg-green-500' : 'bg-red-500') : 'border-gray-300';
+                                                : isSelected
+                                                    ? 'bg-red-500'
+                                                    : 'bg-white'
+                                            : isSelected
+                                                ? 'bg-blue-100'
+                                                : 'bg-white';
 
                                         return (
-                                            <div key={choice.id} className={`mb-2 p-2 border rounded ${borderColor}`} style={{ backgroundColor }}>
+                                            <div key={choice.id} className={`mb-2 p-2 border rounded`} style={{ backgroundColor }}>
                                                 <label className="inline-flex items-center">
                                                     <input
                                                         type="radio"
@@ -95,6 +116,7 @@ const AttemptQuiz = () => {
                                                         value={choice.id}
                                                         onChange={() => handleOptionChange(question.id, choice.id)}
                                                         className="form-radio h-5 w-5 text-indigo-600"
+                                                        disabled={submitted}
                                                     />
                                                     <span className="ml-2">{choice.content}</span>
                                                 </label>
@@ -107,6 +129,21 @@ const AttemptQuiz = () => {
                             </div>
                         </div>
                     ))}
+                    {!submitted && (
+                        <button
+                            onClick={handleSubmit}
+                            className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600"
+                        >
+                            Submit Quiz
+                        </button>
+                    )}
+                    {submitted && (
+                        <div className="mt-6 text-center">
+                            <p className="text-xl font-semibold">
+                                You scored {score} out of {questions.length}
+                            </p>
+                        </div>
+                    )}
                 </>
             )}
         </div>
