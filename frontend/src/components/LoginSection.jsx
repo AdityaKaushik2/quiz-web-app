@@ -40,31 +40,36 @@ const LoginPage = () => {
     };
 
     return (
-        <div className="flex items-center justify-center h-screen bg-gray-100">
-            <div className="p-6 max-w-sm w-full bg-white rounded-lg shadow-md">
-                <h1 className="text-xl font-bold mb-4">Login</h1>
+        <div
+            className="flex items-center justify-center h-screen bg-cover bg-center"
+            style={{ backgroundImage: 'url(https://plus.unsplash.com/premium_photo-1668736594225-55e292fdd95e?q=80&w=1780&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)' }}
+        >
+            <div className="p-8 max-w-sm w-full bg-white bg-opacity-95 rounded-lg shadow-xl">
+                <h1 className="text-2xl font-bold text-blue-600 mb-6 text-center">Login</h1>
                 <form onSubmit={handleLogin}>
                     <input
                         type="text"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
                         placeholder="Username"
-                        className="w-full p-2 mb-4 border rounded"
+                        className="w-full p-3 mb-4 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                     <input
                         type="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder="Password"
-                        className="w-full p-2 mb-4 border rounded"
+                        className="w-full p-3 mb-6 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
-                    <button className="w-full bg-blue-500 text-white p-2 rounded">Login</button>
+                    <button className="w-full bg-blue-600 text-white p-3 rounded hover:bg-blue-700 transition duration-300">
+                        Login
+                    </button>
                 </form>
-                <div className="mt-4 text-center">
-                    <p className="text-gray-600">{`Don't have an account?`}</p>
+                <div className="mt-6 text-center">
+                    <p className="text-gray-700">{`Don't have an account?`}</p>
                     <button
                         onClick={handleRegisterRedirect}
-                        className="mt-2 text-blue-500 hover:underline"
+                        className="mt-2 text-blue-600 hover:underline"
                     >
                         Register Here
                     </button>

@@ -1,12 +1,14 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { clearCredentials } from '../redux/userSlice';
+import { toast } from 'react-toastify';
 
 const Dashboard = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
     const handleGetQuizzes = () => {
+        toast.info("Fetching your quizzes...");
         navigate('/quizzes');
     };
 
@@ -14,34 +16,41 @@ const Dashboard = () => {
         localStorage.removeItem('userId');
         localStorage.removeItem('token');
         dispatch(clearCredentials());
+        toast.success("Successfully logged out!");
         navigate('/login');
     };
 
     return (
-        <div className="p-6">
-            <h1 className="text-3xl font-bold mb-6">User Dashboard</h1>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <Link to="/add-quiz" className="block p-4 bg-blue-500 text-white rounded text-center">
-                    Add Quiz
-                </Link>
-                <Link to="/update-profile" className="block p-4 bg-green-500 text-white rounded text-center">
-                    Update Profile
-                </Link>
-                <button
-                    onClick={handleGetQuizzes}
-                    className="block p-4 bg-yellow-500 text-white rounded text-center"
-                >
-                    Get My Quizzes
-                </button>
-                <Link to="/attempt-quiz" className="block p-4 bg-red-500 text-white rounded text-center">
-                    Attempt a Quiz
-                </Link>
+        <div className="relative flex flex-col items-center justify-center min-h-screen bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">
+            <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-4xl mx-4 sm:mx-0">
+                <h1 className="text-5xl font-extrabold text-gray-800 mb-6 text-center">Welcome!</h1>
                 <button
                     onClick={handleLogout}
-                    className="block p-4 bg-gray-500 text-white rounded text-center"
+                    className="absolute top-4 right-4 bg-red-700 text-white px-6 py-3 rounded-full shadow-xl hover:bg-red-800 transition-colors"
                 >
                     Logout
                 </button>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 mt-12">
+                    <Link to="/add-quiz" className="flex flex-col items-center justify-center p-8 bg-blue-600 text-white rounded-lg shadow-lg transform transition-transform hover:scale-105">
+                        <span className="text-3xl font-semibold mb-2">Add Quiz</span>
+                        <i className="fas fa-plus-circle fa-2x"></i>
+                    </Link>
+                    <Link to="/update-profile" className="flex flex-col items-center justify-center p-8 bg-green-600 text-white rounded-lg shadow-lg transform transition-transform hover:scale-105">
+                        <span className="text-3xl font-semibold mb-2">Update Profile</span>
+                        <i className="fas fa-user-edit fa-2x"></i>
+                    </Link>
+                    <button
+                        onClick={handleGetQuizzes}
+                        className="flex flex-col items-center justify-center p-8 bg-yellow-600 text-white rounded-lg shadow-lg transform transition-transform hover:scale-105"
+                    >
+                        <span className="text-3xl font-semibold mb-2">Get My Quizzes</span>
+                        <i className="fas fa-list-ul fa-2x"></i>
+                    </button>
+                    <Link to="/attempt-quiz" className="flex flex-col items-center justify-center p-8 bg-red-600 text-white rounded-lg shadow-lg transform transition-transform hover:scale-105">
+                        <span className="text-3xl font-semibold mb-2">Attempt a Quiz</span>
+                        <i className="fas fa-pencil-alt fa-2x"></i>
+                    </Link>
+                </div>
             </div>
         </div>
     );
