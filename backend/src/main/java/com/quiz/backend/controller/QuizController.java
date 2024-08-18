@@ -35,9 +35,9 @@ public class QuizController {
     }
 
     @DeleteMapping("user/{userId}/quiz/{quizId}")
-    public ResponseEntity<Void> deleteQuiz(@PathVariable Long quizId, @PathVariable Long userId) {
+    public ResponseEntity<?> deleteQuiz(@PathVariable Long userId, @PathVariable Long quizId) {
         try {
-            quizService.deleteQuiz(quizId, userId);
+            quizService.deleteQuiz(userId, quizId);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (QuizNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
