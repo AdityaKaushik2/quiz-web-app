@@ -11,7 +11,7 @@ public interface QuizService {
 
     Quiz saveQuiz(QuizDTO newQuiz, Long userId);
 
-    void deleteQuiz(Long quizId, Long userId);
+    void deleteQuiz(Long userId, Long quizID);
 
     Quiz updateQuiz(Long quizId, Long userId, QuizDTO updatedQuiz);
 

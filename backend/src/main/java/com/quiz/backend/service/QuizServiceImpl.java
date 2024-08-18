@@ -7,10 +7,7 @@ import com.quiz.backend.entity.Quiz;
 import com.quiz.backend.entity.User;
 import com.quiz.backend.exception.QuizNotFoundException;
 import com.quiz.backend.exception.UserNotFoundException;
-import com.quiz.backend.repository.ChoiceRepository;
-import com.quiz.backend.repository.QuestionRepository;
-import com.quiz.backend.repository.QuizRepository;
-import com.quiz.backend.repository.UserRepository;
+import com.quiz.backend.repository.*;
 import com.quiz.backend.utils.CodeGenerator;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,18 +24,21 @@ public class QuizServiceImpl implements QuizService {
     private final UserRepository userRepository;
     private final QuestionRepository questionRepository;
     private final ChoiceRepository choiceRepository;
+    private final UserQuizRepository userQuizRepository;
     private final ModelMapper modelMapper;
 
     @Autowired
     public QuizServiceImpl(QuizRepository quizRepository, UserRepository userRepository,
                            QuestionRepository questionRepository,
                            ChoiceRepository choiceRepository,
-                           ModelMapper modelMapper) {
+                           ModelMapper modelMapper,
+                           UserQuizRepository userQuizRepository) {
         this.quizRepository = quizRepository;
         this.userRepository = userRepository;
         this.questionRepository = questionRepository;
         this.choiceRepository = choiceRepository;
         this.modelMapper = modelMapper;
+        this.userQuizRepository = userQuizRepository;
     }
 
     @Override
@@ -64,18 +64,26 @@ public class QuizServiceImpl implements QuizService {
 
     @Override
     @Transactional
-    public void deleteQuiz(Long quizId, Long userId) {
+    public void deleteQuiz(Long userId, Long quizId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User Not Found"));
         Quiz quiz = quizRepository.findById(quizId)
                 .orElseThrow(() -> new QuizNotFoundException("Quiz Not Found"));
 
         if (quiz.getUser().getId().equals(user.getId())) {
+            // Find all questions associated with the quiz
             List<Question> questions = questionRepository.findByQuiz_Id(quizId);
+
+            // Delete choices for each question
             for (Question question : questions) {
                 choiceRepository.deleteByQuestion_Id(question.getId());
             }
+
+            // Delete all questions for the quiz
             questionRepository.deleteByQuiz_Id(quizId);
+
+            userQuizRepository.deleteByQuizId(quizId);
+            // Finally, delete the quiz
             quizRepository.deleteById(quizId);
         }
     }
@@ -87,7 +95,7 @@ public class QuizServiceImpl implements QuizService {
         if (!existingQuiz.getUser().getId().equals(userId)) {
             throw new UserNotFoundException("User does not have permission to update this quiz");
         }
-        existingQuiz.setCode(generateUniqueCode());
+        existingQuiz.setCode(existingQuiz.getCode());
         existingQuiz.setDescription(quizDTO.getDescription());
         existingQuiz.setName(quizDTO.getName());
         existingQuiz.setUpdatedAt(LocalDateTime.now());
