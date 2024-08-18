@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 const ProfilePage = () => {
     const [firstName, setFirstName] = useState('');
@@ -11,31 +12,14 @@ const ProfilePage = () => {
     const userId = localStorage.getItem('userId');
     const token = localStorage.getItem('token');
 
-
-    useEffect(() => {
-        console.log("ProfilePage Loaded - userId:", userId, "token:", token); // Log userId and token
-        const fetchProfile = async () => {
-            try {
-                const response = await axios.get(`http://localhost:8080/api/user/${userId}`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
-                const { firstName, lastName, email, username } = response.data;
-                setFirstName(firstName);
-                setLastName(lastName);
-                setEmail(email);
-                setUsername(username);
-            } catch (error) {
-                console.error('Failed to fetch user profile', error);
-            }
-        };
-
-        fetchProfile();
-    }, [userId, token]);
-
     const handleUpdate = async (e) => {
         e.preventDefault();
+
+        if (!firstName || !lastName || !email || !username) {
+            toast.error('Please fill in all the required fields.');
+            return;
+        }
+
         try {
             await axios.put(
                 `http://localhost:8080/api/user/${userId}`,
@@ -46,74 +30,74 @@ const ProfilePage = () => {
                     },
                 }
             );
-            alert('Profile updated successfully!');
+            toast.success('Profile updated successfully!');
         } catch (error) {
+            toast.error('Failed to update profile');
             console.error('Failed to update profile', error);
         }
     };
 
     const handleDelete = async () => {
-        console.log("Attempting to delete user - userId:", userId); // Log userId before delete
         try {
             await axios.delete(`http://localhost:8080/api/user/${userId}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
             });
-            alert('User deleted successfully!');
-            // Optionally redirect or logout after deletion
+            toast.success('User deleted successfully!');
         } catch (error) {
+            toast.error('Failed to delete user');
             console.error('Failed to delete user', error);
         }
     };
 
     return (
-        <div className="flex items-center justify-center h-screen bg-gray-100">
-            <div className="p-6 max-w-md w-full bg-white rounded-lg shadow-md">
-                <h1 className="text-xl font-bold mb-4">Update Profile</h1>
+        <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-400 to-purple-600">
+            <div className="p-8 max-w-lg w-full bg-white rounded-lg shadow-lg">
+                <h1 className="text-2xl font-bold text-center mb-6 text-gray-800">Update Profile</h1>
                 <form onSubmit={handleUpdate}>
                     <input
                         type="text"
                         value={firstName}
                         onChange={(e) => setFirstName(e.target.value)}
                         placeholder="First Name"
-                        className="w-full p-2 mb-4 border rounded"
+                        className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
                     />
                     <input
                         type="text"
                         value={lastName}
                         onChange={(e) => setLastName(e.target.value)}
                         placeholder="Last Name"
-                        className="w-full p-2 mb-4 border rounded"
+                        className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
                     />
                     <input
                         type="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="Email"
-                        className="w-full p-2 mb-4 border rounded"
+                        className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
                     />
                     <input
                         type="text"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
                         placeholder="Username"
-                        className="w-full p-2 mb-4 border rounded"
+                        className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
                     />
                     <input
                         type="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder="New Password (optional)"
-                        className="w-full p-2 mb-4 border rounded"
+                        className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
                     />
-                    <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded mb-4">
+                    <button type="submit" className="w-full bg-blue-500 text-white p-3 rounded-lg hover:bg-blue-600 transition-colors">
                         Update Profile
                     </button>
                 </form>
                 <button
                     onClick={handleDelete}
-                    className="w-full bg-red-500 text-white p-2 rounded"
+                    className="w-full mt-4 bg-red-500 text-white p-3 rounded-lg hover:bg-red-600 transition-colors"
                 >
                     Delete Account
                 </button>
