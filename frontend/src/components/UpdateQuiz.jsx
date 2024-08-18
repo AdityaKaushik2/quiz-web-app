@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 const UpdateQuiz = () => {
     const { quizId } = useParams();
     const navigate = useNavigate();
-    const [title, setTitle] = useState('');
+    const [name, setName] = useState('');
     const [description, setDescription] = useState('');
 
     const userId = localStorage.getItem('userId');
@@ -19,7 +19,7 @@ const UpdateQuiz = () => {
                         Authorization: `Bearer ${token}`,
                     },
                 });
-                setTitle(response.data.title);
+                setName(response.data.name);
                 setDescription(response.data.description);
         };
 
@@ -29,7 +29,7 @@ const UpdateQuiz = () => {
     const handleUpdate = async (e) => {
         e.preventDefault();
         try {
-            await axios.put(`http://localhost:8080/user/${userId}/quiz/${quizId}`, { title, description }, {
+            await axios.put(`http://localhost:8080/user/${userId}/quiz/${quizId}`, { name, description }, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -50,8 +50,8 @@ const UpdateQuiz = () => {
                     <div className="mb-4">
                         <input
                             type="text"
-                            value={title}
-                            onChange={(e) => setTitle(e.target.value)}
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
                             placeholder="Quiz Title"
                             className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
