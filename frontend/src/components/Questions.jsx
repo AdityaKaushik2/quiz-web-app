@@ -179,8 +179,8 @@ const Questions = () => {
     };
 
     return (
-        <div className="p-6">
-            <h1 className="text-2xl font-bold mb-6">Questions for Quiz ID: {quizId}</h1>
+        <div className="min-h-screen bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 p-6">
+            <h1 className="text-2xl font-bold mb-6 text-white">Questions for Quiz ID: {quizId}</h1>
 
             {/* Add new question section */}
             <div className="mb-6">
@@ -191,12 +191,14 @@ const Questions = () => {
                     placeholder="Enter new question"
                     className="w-full p-3 mb-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
                 />
-                <button
-                    onClick={handleAddQuestion}
-                    className="p-3 bg-green-500 text-white rounded-lg w-full hover:bg-green-600 transition-colors"
-                >
-                    Add Question
-                </button>
+                <div className="flex justify-center">
+                    <button
+                        onClick={handleAddQuestion}
+                        className="p-3 bg-gradient-to-r from-green-400 to-green-500 text-white rounded-lg w-1/6 hover:bg-green-600 transition-colors"
+                    >
+                        Add Question
+                    </button>
+                </div>
             </div>
 
             {/* Questions list */}
@@ -213,12 +215,14 @@ const Questions = () => {
                                             onChange={(e) => setUpdatedQuestionContent(e.target.value)}
                                             className="w-full p-3 mb-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
                                         />
-                                        <button
-                                            onClick={() => handleUpdateQuestion(question.id)}
-                                            className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
-                                        >
-                                            Update
-                                        </button>
+                                        <div className="flex">
+                                            <button
+                                                onClick={() => handleUpdateQuestion(question.id)}
+                                                className="p-2 bg-gradient-to-r from-blue-400 to-blue-500 text-white rounded-lg w-1/8 hover:bg-blue-600 transition-colors"
+                                            >
+                                                Update
+                                            </button>
+                                        </div>
                                     </>
                                 ) : (
                                     <>
@@ -229,13 +233,13 @@ const Questions = () => {
                             <div className="flex space-x-2 mt-4">
                                 <button
                                     onClick={() => handleEditQuestion(question)}
-                                    className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                                    className="p-2 bg-gradient-to-r from-blue-400 to-blue-500 text-white rounded-lg w-1/8 hover:bg-blue-600 transition-colors"
                                 >
                                     Edit
                                 </button>
                                 <button
                                     onClick={() => handleDeleteQuestion(question.id)}
-                                    className="p-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
+                                    className="p-2 bg-gradient-to-r from-red-400 to-red-500 text-white rounded-lg w-1/8 hover:bg-red-600 transition-colors"
                                 >
                                     Delete
                                 </button>
@@ -258,14 +262,16 @@ const Questions = () => {
                                             onChange={(e) => setNewChoiceCorrect(e.target.checked)}
                                             className="mr-2"
                                         />
-                                        <label>Correct</label>
+                                        <label className="text-white">Correct</label>
                                     </div>
-                                    <button
-                                        onClick={() => handleAddChoice(question.id)}
-                                        className="p-3 bg-green-500 text-white rounded-lg w-full hover:bg-green-600 transition-colors mt-2"
-                                    >
-                                        Add Choice
-                                    </button>
+                                    <div className="flex justify-center">
+                                        <button
+                                            onClick={() => handleAddChoice(question.id)}
+                                            className="p-3 bg-gradient-to-r from-green-400 to-green-500 text-white rounded-lg w-1/6 hover:bg-green-600 transition-colors mt-2"
+                                        >
+                                            Add Choice
+                                        </button>
+                                    </div>
                                 </div>
                             )}
 
@@ -291,26 +297,28 @@ const Questions = () => {
                                                         />
                                                         <label>Correct</label>
                                                     </div>
-                                                    <button
-                                                        onClick={() => handleUpdateChoice(question.id, choice.id)}
-                                                        className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors mt-2"
-                                                    >
-                                                        Update
-                                                    </button>
+                                                    <div className="flex ">
+                                                        <button
+                                                            onClick={() => handleUpdateChoice(question.id, choice.id)}
+                                                            className="p-2 bg-gradient-to-r from-blue-400 to-blue-500 text-white rounded-lg w-1/8 hover:bg-blue-600 transition-colors mt-2"
+                                                        >
+                                                            Update
+                                                        </button>
+                                                    </div>
                                                 </>
                                             ) : (
-                                                <span>{`Option ${index + 1}: ${choice.content} (${choice.correct ? 'Correct' : 'Incorrect'})`}</span>
+                                                <span>Option {index + 1}: {choice.content} ({choice.correct ? 'Correct' : 'Incorrect'})</span>
                                             )}
                                             <div className="flex space-x-2 mt-2">
                                                 <button
                                                     onClick={() => handleEditChoice(choice)}
-                                                    className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                                                    className="p-2 bg-gradient-to-r from-blue-400 to-blue-500 text-white rounded-lg w-1/8 hover:bg-blue-600 transition-colors"
                                                 >
                                                     Edit
                                                 </button>
                                                 <button
                                                     onClick={() => handleDeleteChoice(question.id, choice.id)}
-                                                    className="p-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
+                                                    className="p-2 bg-gradient-to-r from-red-400 to-red-500 text-white rounded-lg w-1/8 hover:bg-red-600 transition-colors"
                                                 >
                                                     Delete
                                                 </button>
@@ -323,7 +331,7 @@ const Questions = () => {
                     ))}
                 </ul>
             ) : (
-                <p>No questions available</p>
+                <p className="text-white">No questions available</p>
             )}
         </div>
     );
