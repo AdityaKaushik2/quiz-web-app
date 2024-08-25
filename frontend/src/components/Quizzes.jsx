@@ -12,7 +12,7 @@ const Quizzes = () => {
     useEffect(() => {
         const fetchQuizzes = async () => {
             try {
-                const response = await axios.get(`http://localhost:8080/user/quiz/${userId}`, {
+                const response = await axios.get(`${import.meta.env.VITE_REACT_APP_API_URL}/user/quiz/${userId}`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
@@ -32,7 +32,7 @@ const Quizzes = () => {
 
     const handleDeleteQuiz = async (quizId) => {
         try {
-            await axios.delete(`http://localhost:8080/user/${userId}/quiz/${quizId}`, {
+            await axios.delete(`${import.meta.env.VITE_REACT_APP_API_URL}/user/${userId}/quiz/${quizId}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },

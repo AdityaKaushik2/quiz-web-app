@@ -15,7 +15,7 @@ const UserDetailsPage = () => {
                 const storedPassword = localStorage.getItem('password');
                 const authHeader = `Basic ${btoa(`${storedUsername}:${storedPassword}`)}`;
 
-                const response = await axios.get(`http://localhost:8080/api/user/${username}`, {
+                const response = await axios.get(`${import.meta.env.VITE_REACT_APP_API_URL}/api/user/${username}`, {
                     headers: {
                         'Authorization': authHeader
                     }

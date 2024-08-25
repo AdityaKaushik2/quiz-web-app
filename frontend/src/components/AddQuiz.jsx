@@ -30,7 +30,7 @@ const AddQuiz = () => {
 
         try {
             await axios.post(
-                `http://localhost:8080/${userId}/quiz`,
+                `${import.meta.env.VITE_REACT_APP_API_URL}/${userId}/quiz`,
                 { name, description },
                 { headers: { Authorization: `Bearer ${token}` } }
             );

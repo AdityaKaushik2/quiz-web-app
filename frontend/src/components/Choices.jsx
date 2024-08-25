@@ -11,7 +11,7 @@ const Choices = ({ quizId, questionId }) => {
     useEffect(() => {
         const fetchChoices = async () => {
             try {
-                const response = await axios.get(`http://localhost:8080/user/${userId}/quiz/${quizId}/question/${questionId}/choice`, {
+                const response = await axios.get(`${import.meta.env.VITE_REACT_APP_API_URL}/user/${userId}/quiz/${quizId}/question/${questionId}/choice`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },

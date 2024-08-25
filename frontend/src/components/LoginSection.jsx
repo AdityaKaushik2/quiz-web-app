@@ -15,7 +15,7 @@ const LoginPage = () => {
         e.preventDefault();
         dispatch(setStatus('loading'));
         try {
-            const response = await axios.post('http://localhost:8080/api/auth/login', { username, password });
+            const response = await axios.post(`${import.meta.env.VITE_REACT_APP_API_URL}/api/auth/login`, { username, password });
             const { id: userId, jwtToken: token } = response.data;
 
             if (token && userId) {
@@ -30,7 +30,7 @@ const LoginPage = () => {
                 dispatch(setError("Wrong Credentials"));
             }
         } catch (error) {
-            toast.error("Login failed");
+            toast.error("Wrong Credentials");
             dispatch(setError('Login failed'));
         }
     };

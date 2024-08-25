@@ -14,7 +14,7 @@ const UpdateQuiz = () => {
 
     useEffect(() => {
         const fetchQuiz = async () => {
-                const response = await axios.get(`http://localhost:8080/user/${userId}/quiz/${quizId}`, {
+                const response = await axios.get(`${import.meta.env.VITE_REACT_APP_API_URL}/user/${userId}/quiz/${quizId}`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
@@ -29,7 +29,7 @@ const UpdateQuiz = () => {
     const handleUpdate = async (e) => {
         e.preventDefault();
         try {
-            await axios.put(`http://localhost:8080/user/${userId}/quiz/${quizId}`, { name, description }, {
+            await axios.put(`${import.meta.env.VITE_REACT_APP_API_URL}/user/${userId}/quiz/${quizId}`, { name, description }, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },

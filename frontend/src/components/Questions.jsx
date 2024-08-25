@@ -21,7 +21,7 @@ const Questions = () => {
         const fetchQuestions = async () => {
             try {
                 const response = await axios.get(
-                    `http://localhost:8080/user/${userId}/quiz/${quizId}/questions`,
+                    `${import.meta.env.VITE_REACT_APP_API_URL}/user/${userId}/quiz/${quizId}/questions`,
                     { headers: { Authorization: `Bearer ${token}` } }
                 );
                 setQuestions(response.data);
@@ -41,7 +41,7 @@ const Questions = () => {
         }
         try {
             const response = await axios.post(
-                `http://localhost:8080/user/${userId}/quiz/${quizId}/questions`,
+                `${import.meta.env.VITE_REACT_APP_API_URL}/user/${userId}/quiz/${quizId}/questions`,
                 { content: newQuestion },
                 { headers: { Authorization: `Bearer ${token}` } }
             );
@@ -66,7 +66,7 @@ const Questions = () => {
         }
         try {
             const response = await axios.put(
-                `http://localhost:8080/user/${userId}/quiz/${quizId}/questions/${questionId}`,
+                `${import.meta.env.VITE_REACT_APP_API_URL}/user/${userId}/quiz/${quizId}/questions/${questionId}`,
                 { content: updatedQuestionContent },
                 { headers: { Authorization: `Bearer ${token}` } }
             );
@@ -82,7 +82,7 @@ const Questions = () => {
     const handleDeleteQuestion = async (questionId) => {
         try {
             await axios.delete(
-                `http://localhost:8080/user/${userId}/quiz/${quizId}/questions/${questionId}`,
+                `${import.meta.env.VITE_REACT_APP_API_URL}/user/${userId}/quiz/${quizId}/questions/${questionId}`,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
             setQuestions(questions.filter((q) => q.id !== questionId));
@@ -107,7 +107,7 @@ const Questions = () => {
 
         try {
             const response = await axios.post(
-                `http://localhost:8080/user/${userId}/quiz/${quizId}/question/${questionId}/choice`,
+                `${import.meta.env.VITE_REACT_APP_API_URL}/user/${userId}/quiz/${quizId}/question/${questionId}/choice`,
                 { content: newChoice, correct: newChoiceCorrect },
                 { headers: { Authorization: `Bearer ${token}` } }
             );
@@ -143,7 +143,7 @@ const Questions = () => {
 
         try {
             const response = await axios.put(
-                `http://localhost:8080/user/${userId}/quiz/${quizId}/question/${questionId}/choice/${choiceId}`,
+                `${import.meta.env.VITE_REACT_APP_API_URL}/user/${userId}/quiz/${quizId}/question/${questionId}/choice/${choiceId}`,
                 { content: updatedChoiceContent, correct: updatedChoiceCorrect },
                 { headers: { Authorization: `Bearer ${token}` } }
             );
@@ -165,7 +165,7 @@ const Questions = () => {
     const handleDeleteChoice = async (questionId, choiceId) => {
         try {
             await axios.delete(
-                `http://localhost:8080/user/${userId}/quiz/${quizId}/question/${questionId}/choice/${choiceId}`,
+                `${import.meta.env.VITE_REACT_APP_API_URL}/user/${userId}/quiz/${quizId}/question/${questionId}/choice/${choiceId}`,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
             setQuestions(questions.map((q) =>
@@ -180,7 +180,7 @@ const Questions = () => {
 
     return (
         <div className="min-h-screen bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 p-6">
-            <h1 className="text-2xl font-bold mb-6 text-white">Questions for Quiz ID: {quizId}</h1>
+            <h1 className="text-2xl font-bold mb-6 text-white">Questions</h1>
 
             {/* Add new question section */}
             <div className="mb-6">
@@ -262,7 +262,7 @@ const Questions = () => {
                                             onChange={(e) => setNewChoiceCorrect(e.target.checked)}
                                             className="mr-2"
                                         />
-                                        <label className="text-white">Correct</label>
+                                        <label className="text-blue-700">Correct</label>
                                     </div>
                                     <div className="flex justify-center">
                                         <button

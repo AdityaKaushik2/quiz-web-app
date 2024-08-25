@@ -92,7 +92,7 @@ const AttemptQuiz = () => {
 
         try {
             const token = localStorage.getItem('token');
-            const response = await axios.post('http://localhost:8080/api/user-quiz/store', dataToSend, {
+            const response = await axios.post(`${import.meta.env.VITE_REACT_APP_API_URL}/api/user-quiz/store`, dataToSend, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     'Content-Type': 'application/json',

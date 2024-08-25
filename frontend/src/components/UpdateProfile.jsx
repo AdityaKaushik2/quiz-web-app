@@ -22,7 +22,7 @@ const ProfilePage = () => {
 
         try {
             await axios.put(
-                `http://localhost:8080/api/user/${userId}`,
+                `${import.meta.env.VITE_REACT_APP_API_URL}/api/user/${userId}`,
                 { firstName, lastName, email, username, password },
                 {
                     headers: {
@@ -39,7 +39,7 @@ const ProfilePage = () => {
 
     const handleDelete = async () => {
         try {
-            await axios.delete(`http://localhost:8080/api/user/${userId}`, {
+            await axios.delete(`${import.meta.env.VITE_REACT_APP_API_URL}/api/user/${userId}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },

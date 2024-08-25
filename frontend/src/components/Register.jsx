@@ -21,7 +21,7 @@ const Register = () => {
         }
 
         try {
-            await axios.post('http://localhost:8080/api/user', {
+            await axios.post(`${import.meta.env.VITE_REACT_APP_API_URL}/api/user`, {
                 firstName,
                 lastName,
                 username,
